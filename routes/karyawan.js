@@ -17,4 +17,6 @@ app.put("/:id_karyawan", karyawanControl.editDataKaryawan)
 //end point DELETE untuk menghapus data karyawan
 app.delete("/:id_karyawan", karyawanControl.deleteDataKaryawan)
 
+app.post("/auth", karyawanControl.authentication)
+
 module.exports = app

@@ -1,5 +1,8 @@
 let modelMobil = require("../models/index").mobil
 
+let path = require("path")
+let fs = require("fs")
+
 exports.getDataMobil = (request, response) => {
     modelMobil.findAll()
         .then(result => {
@@ -17,6 +20,11 @@ exports.getDataMobil = (request, response) => {
 
 //untuk handle add data Mobil
 exports.addDataMobil = (request, response) => {
+    if(!request.file){
+        return response.json({
+            message : `nothing to upload`
+        })
+    }
     // tampung data request
     let newMobil = {
         nomor_mobil : request.body.nomor_mobil,
@@ -25,7 +33,7 @@ exports.addDataMobil = (request, response) => {
         warna : request.body.warna,
         tahun_pembuatan : request.body.tahun_pembuatan,
         biaya_sewa : request.body.biaya_sewa,
-        image : request.body.image
+        image : request.file.filename
     }
     modelMobil.create(newMobil)
     .then(result => {
@@ -50,7 +58,7 @@ exports.editDataMobil = (request, response) => {
         warna : request.body.warna,
         tahun_pembuatan : request.body.tahun_pembuatan,
         biaya_sewa : request.body.biaya_sewa,
-        image : request.body.image
+        image : request.body.filename
     }
     // eksekusi 
     modelMobil.update(dataMobil, {where :{id_mobil:idMobil}})
@@ -67,8 +75,19 @@ exports.editDataMobil = (request, response) => {
 }
 
 //untuk handle delete data Mobil
-exports.deleteDataMobil = (request, response) => {
+exports.deleteDataMobil = async(request, response) => {
     let idMobil = request.params.id_mobil
+
+    //ambil dulu data filename yang akan dihapus
+    let mobil = await modelMobil.findOne({where: {id_mobil: idMobil}})
+    if(mobil){
+        let oldFileName = mobil.image
+
+        //delete file
+        let location = path.join(__dirname, "../image", oldFileName)
+        fs.unlink(location, error => console.log(error))
+    }
+
 
     // eksekusi 
     modelMobil.destroy({where :{id_mobil:idMobil}})
