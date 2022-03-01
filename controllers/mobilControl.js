@@ -49,7 +49,7 @@ exports.addDataMobil = (request, response) => {
 }
 
 //untuk handle edit data Mobil
-exports.editDataMobil = (request, response) => {
+exports.editDataMobil = async(request, response) => {
     let idMobil = request.params.id_mobil
     let dataMobil = {
         nomor_mobil : request.body.nomor_mobil,
@@ -58,7 +58,19 @@ exports.editDataMobil = (request, response) => {
         warna : request.body.warna,
         tahun_pembuatan : request.body.tahun_pembuatan,
         biaya_sewa : request.body.biaya_sewa,
-        image : request.body.filename
+    }
+
+    if (request.file) {
+        let mobil = await modelMobil.findOne({where : {id_mobil : idMobil}})
+        let oldFileName = mobil.image
+
+        //delete file
+        let location = path.join(__dirname, "../image", oldFileName)
+        fs.unlink(location, error => console.log(error))
+
+        //menyisipkan nama file baru ke da,am objek datasiswa
+        dataMobil.image = request.file.filename
+
     }
     // eksekusi 
     modelMobil.update(dataMobil, {where :{id_mobil:idMobil}})

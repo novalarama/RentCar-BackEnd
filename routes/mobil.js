@@ -18,7 +18,11 @@ app.post(
 );
 
 //end point PUT untuk mengedit data mobil
-app.put("/:id_mobil", authorization.authorization, mobilControl.editDataMobil);
+app.put(
+  "/:id_mobil",
+  [authorization.authorization, uploadImage.upload.single(`image`)],
+  mobilControl.editDataMobil
+);
 
 //end point DELETE untuk menghapus data mobil
 app.delete(
