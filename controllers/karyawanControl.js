@@ -1,5 +1,6 @@
 const md5 = require("md5")
 let jwt = require(`jsonwebtoken`)
+const{validationResult} = require(`express-validator`)
 
 let modelKaryawan = require("../models/index").karyawan
 
@@ -21,6 +22,10 @@ exports.getDataKaryawan = (request, response) => {
 
 //untuk handle add data Karyawan
 exports.addDataKaryawan = (request, response) => {
+    let error = validationResult(request)
+    if(!error.isEmpty()){
+        return response.json(error.array())
+    }
     // tampung data request
     let newKaryawan = {
         nama_karyawan : request.body.nama_karyawan,

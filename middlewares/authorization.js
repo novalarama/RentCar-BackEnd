@@ -12,7 +12,7 @@ exports.authorization = (request, response, next) => {
         })
     }else {
         let secretKey = "Rental Mobil"
-        jwt.verify(token, secretKey, (error, user) => {
+        jwt.verify(token, secretKey, (error, karyawan) => {
             if(error){
                 return response.json({
                     message : `Invalid Token`

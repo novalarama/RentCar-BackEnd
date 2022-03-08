@@ -1,4 +1,5 @@
 let modelSewa = require("../models/index").sewa
+let modelMobil = require("../models/index").mobil
 
 exports.getDataSewa = (request, response) => {
     modelSewa.findAll()
@@ -16,7 +17,18 @@ exports.getDataSewa = (request, response) => {
 }
 
 //untuk handle add data Sewa
-exports.addDataSewa = (request, response) => {
+exports.addDataSewa = async(request, response) => {
+    let mobil = await modelMobil.findOne({
+        where : {id_mobil: request.body.id_mobil}
+    })
+    let biayaSewa = mobil.biaya_sewa
+    let tgl_kembali = new Date(request.body.tgl_kembali)
+    let tgl_sewa = new Date(request.body.tgl_sewa)
+
+    var dif = tgl_kembali.getTime() - tgl_sewa.getTime()
+    var dif2 = dif/(1000*3600*24)
+
+    let totalBayar = dif2 * biayaSewa
     // tampung data request
     let newSewa = {
         id_mobil : request.body.id_mobil,
@@ -24,8 +36,10 @@ exports.addDataSewa = (request, response) => {
         id_pelanggan : request.body.id_pelanggan,
         tgl_sewa : request.body.tgl_sewa,
         tgl_kembali : request.body.tgl_kembali,
-        total_bayar : request.body.total_bayar
+        total_bayar :totalBayar
     }
+
+
     modelSewa.create(newSewa)
     .then(result => {
         return response.json({
