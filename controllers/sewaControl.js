@@ -1,19 +1,19 @@
 let modelSewa = require("../models/index").sewa
 let modelMobil = require("../models/index").mobil
 
-exports.getDataSewa = (request, response) => {
-    modelSewa.findAll()
-        .then(result => {
-            return response.json({
-                Count : result.length,
-                Sewa : result
-            })
-        })
-        .catch(error => {
-            return response.json({
-                message: error.message
-            })
-        })
+exports.getDataSewa = async(request, response) => {
+    // variabel async digunakan ketika memakai await
+  let dataSewa = await modelSewa.findAll({
+    include: [
+      "pelanggan",
+      "karyawan",
+      "mobil"
+    ],
+  }); //biasanya menggunakan seperti inti hanya untuk get
+  return response.json({
+    Count: dataSewa.length,
+    Pelanggaran: dataSewa,
+  });
 }
 
 //untuk handle add data Sewa
