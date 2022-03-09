@@ -21,18 +21,18 @@ exports.getDataSewa = async(request, response) => {
 }
 
 exports.findSewa = async(request, response) => {
-    let keyword = request.body.keyword
+    let start = request.body.start // tgl awal
+    let end = request.body.end // tgl akhir
 
     let dataSewa = await modelSewa.findAll({
-        where : {
-            [Op.or] : {
-                id_sewa: {[Op.like]:`%${keyword}%`},
-                id_karyawan: {[Op.like]:`%${keyword}%`},
-                id_pelanggan: {[Op.like]:`%${keyword}%`},
-                tgl_sewa: {[Op.like]:`%${keyword}%`},
-                tgl_kembali: {[Op.like]:`%${keyword}%`}
-            }
-        }
+        include: [
+            "pelanggan",
+            "karyawan",
+            "mobil"
+          ],
+        where: {
+            waktu: {[Op.between]:[start, end]}
+          }
     })
 
     return response.json(dataSewa)
