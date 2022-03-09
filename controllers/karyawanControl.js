@@ -4,6 +4,10 @@ const{validationResult} = require(`express-validator`)
 
 let modelKaryawan = require("../models/index").karyawan
 
+//import sequelize operator
+let sequelize = require(`sequelize`)
+let Op = sequelize.Op
+
 
 exports.getDataKaryawan = (request, response) => {
     modelKaryawan.findAll()
@@ -18,6 +22,21 @@ exports.getDataKaryawan = (request, response) => {
                 message: error.message
             })
         })
+}
+
+exports.findUser = async(request, response) => {
+    let keyword = request.body.keyword
+
+    let dataUser = await modelUser.findAll({
+        where : {
+            [Op.or] : {
+                username: {[Op.like]:`%${keyword}%`},
+                nama_user: {[Op.like]:`%${keyword}%`}
+            }
+        }
+    })
+
+    return response.json(dataUser)
 }
 
 //untuk handle add data Karyawan
