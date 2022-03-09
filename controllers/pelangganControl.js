@@ -1,5 +1,9 @@
 let modelPelanggan = require("../models/index").pelanggan
 
+//import sequelize operator
+let sequelize = require(`sequelize`)
+let Op = sequelize.Op
+
 exports.getDataPelanggan = (request, response) => {
     modelPelanggan.findAll()
         .then(result => {
@@ -13,6 +17,22 @@ exports.getDataPelanggan = (request, response) => {
                 message: error.message
             })
         })
+}
+
+exports.findPelanggan = async(request, response) => {
+    let keyword = request.body.keyword
+
+    let dataPelanggan = await modelPelanggan.findAll({
+        where : {
+            [Op.or] : {
+                nama_pelanggan: {[Op.like]:`%${keyword}%`},
+                alamat_pelanggan: {[Op.like]:`%${keyword}%`},
+                kontak: {[Op.like]:`%${keyword}%`}
+            }
+        }
+    })
+
+    return response.json(dataPelanggan)
 }
 
 //untuk handle add data Pelanggan

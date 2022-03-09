@@ -10,6 +10,9 @@ let authorization = require("../middlewares/authorization")
 //end point GET untuk menampilkan data Pelanggan
 app.get("/", authorization.authorization, pelangganControl.getDataPelanggan)
 
+app.post("/find", [authorization.authorization], pelangganControl.findPelanggan);
+
+
 //end point POST untuk menambah data Pelanggan
 app.post("/", authorization.authorization, pelangganControl.addDataPelanggan)
 

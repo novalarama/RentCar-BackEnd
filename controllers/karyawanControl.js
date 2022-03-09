@@ -24,19 +24,21 @@ exports.getDataKaryawan = (request, response) => {
         })
 }
 
-exports.findUser = async(request, response) => {
+exports.findKaryawan = async(request, response) => {
     let keyword = request.body.keyword
 
-    let dataUser = await modelUser.findAll({
+    let dataKaryawan = await modelKaryawan.findAll({
         where : {
             [Op.or] : {
-                username: {[Op.like]:`%${keyword}%`},
-                nama_user: {[Op.like]:`%${keyword}%`}
+                nama_karyawan: {[Op.like]:`%${keyword}%`},
+                alamat_karyawan: {[Op.like]:`%${keyword}%`},
+                kontak_karyawan: {[Op.like]:`%${keyword}%`},
+                username: {[Op.like]:`%${keyword}%`}
             }
         }
     })
 
-    return response.json(dataUser)
+    return response.json(dataKaryawan)
 }
 
 //untuk handle add data Karyawan

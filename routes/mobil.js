@@ -10,6 +10,9 @@ let uploadImage = require("../middlewares/uploadImage");
 //end point GET untuk menampilkan data mobil
 app.get("/", authorization.authorization, mobilControl.getDataMobil);
 
+app.post("/find", [authorization.authorization], mobilControl.findMobil);
+
+
 //end point POST untuk menambah data mobil
 app.post(
   "/",

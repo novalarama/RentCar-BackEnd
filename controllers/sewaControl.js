@@ -1,6 +1,10 @@
 let modelSewa = require("../models/index").sewa
 let modelMobil = require("../models/index").mobil
 
+//import sequelize operator
+let sequelize = require(`sequelize`)
+let Op = sequelize.Op
+
 exports.getDataSewa = async(request, response) => {
     // variabel async digunakan ketika memakai await
   let dataSewa = await modelSewa.findAll({
@@ -14,6 +18,24 @@ exports.getDataSewa = async(request, response) => {
     Count: dataSewa.length,
     Pelanggaran: dataSewa,
   });
+}
+
+exports.findSewa = async(request, response) => {
+    let keyword = request.body.keyword
+
+    let dataSewa = await modelSewa.findAll({
+        where : {
+            [Op.or] : {
+                id_sewa: {[Op.like]:`%${keyword}%`},
+                id_karyawan: {[Op.like]:`%${keyword}%`},
+                id_pelanggan: {[Op.like]:`%${keyword}%`},
+                tgl_sewa: {[Op.like]:`%${keyword}%`},
+                tgl_kembali: {[Op.like]:`%${keyword}%`}
+            }
+        }
+    })
+
+    return response.json(dataSewa)
 }
 
 //untuk handle add data Sewa

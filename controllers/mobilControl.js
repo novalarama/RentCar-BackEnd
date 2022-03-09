@@ -3,6 +3,10 @@ let modelMobil = require("../models/index").mobil
 let path = require("path")
 let fs = require("fs")
 
+//import sequelize operator
+let sequelize = require(`sequelize`)
+let Op = sequelize.Op
+
 exports.getDataMobil = (request, response) => {
     modelMobil.findAll()
         .then(result => {
@@ -16,6 +20,25 @@ exports.getDataMobil = (request, response) => {
                 message: error.message
             })
         })
+}
+
+exports.findMobil = async(request, response) => {
+    let keyword = request.body.keyword
+
+    let dataMobil = await modelMobil.findAll({
+        where : {
+            [Op.or] : {
+                nomor_mobil: {[Op.like]:`%${keyword}%`},
+                merk: {[Op.like]:`%${keyword}%`},
+                jenis: {[Op.like]:`%${keyword}%`},
+                warna: {[Op.like]:`%${keyword}%`},
+                tahun_pembuatan: {[Op.like]:`%${keyword}%`},
+                biaya_sewa: {[Op.like]:`%${keyword}%`}
+            }
+        }
+    })
+
+    return response.json(dataMobil)
 }
 
 //untuk handle add data Mobil

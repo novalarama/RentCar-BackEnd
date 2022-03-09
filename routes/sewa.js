@@ -9,6 +9,9 @@ let authorization = require("../middlewares/authorization")
 //end point GET untuk menampilkan data Sewa
 app.get("/", authorization.authorization, sewaControl.getDataSewa)
 
+app.post("/find", [authorization.authorization], sewaControl.findSewa);
+
+
 //end point POST untuk menambah data Sewa
 app.post("/", authorization.authorization, sewaControl.addDataSewa)
 
