@@ -94,10 +94,12 @@ exports.editDataKaryawan = (request, response) => {
 
 //untuk handle delete data Karyawan
 exports.deleteDataKaryawan = (request, response) => {
-    let idKaryawan = request.params.id_karyawan
+    let params = {
+        id_karyawan : request.params.id_karyawan
+    }
 
     // eksekusi 
-    modelKaryawan.destroy({where :{id_karyawan:idKaryawan}})
+    modelKaryawan.destroy({where : params})
     .then(result => {
         return response.json({
             message : `Data has been deleted`
