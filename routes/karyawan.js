@@ -10,7 +10,7 @@ const authorization = require("../middlewares/authorization");
 //end point GET untuk menampilkan data karyawan
 app.get("/", [authorization.authorization], karyawanControl.getDataKaryawan);
 
-app.post("/find", [authorization.authorization], karyawanControl.findUser);
+app.post("/find", [authorization.authorization], karyawanControl.findKaryawan);
 
 //end point POST untuk menambah data karyawan
 app.post(

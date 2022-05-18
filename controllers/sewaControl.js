@@ -16,7 +16,7 @@ exports.getDataSewa = async(request, response) => {
   }); //biasanya menggunakan seperti inti hanya untuk get
   return response.json({
     Count: dataSewa.length,
-    Pelanggaran: dataSewa,
+    Sewa: dataSewa,
   });
 }
 
